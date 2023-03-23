@@ -1,2 +1,17 @@
 version: "2.15"
 
+service:
+  - nginx
+  - wordpress_php-fpm
+  - mariadb
+  -> all restart in case of crash
+
+volume:
+  - WordPress database in one
+      - 2 users, one of them admin
+      - admin's username shouldn't contain admin or administrator
+  - WordPress website files in other one
+  -> both volumes should be in /home/<login>/data of host machine
+
+network: connection between containers
+  -> no host or --link or links
