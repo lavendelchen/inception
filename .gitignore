@@ -10,6 +10,9 @@
 # Unignore Makefile
 !Makefile
 
+# Unignore Dockerfile
+!Dockerfile
+
 # Object files
 *.o
 
