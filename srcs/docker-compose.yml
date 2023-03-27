@@ -1,9 +1,14 @@
 version: "2.15"
 
+init flag!
+
 service:
   - nginx
+    init: true
   - wordpress_php-fpm
+    init: true
   - mariadb
+    init: true
   -> all restart in case of crash
 
 volume:

@@ -1,5 +1,5 @@
 MariaDB only
 
-FROM Alpine or Debian
+FROM debian:buster
 ENTRYPOINT musn’t be started with a command running an infinite
 loop
