@@ -1,14 +1,22 @@
 version: "2.15"
+name: inception
 
 init flag!
 
-service:
-  - nginx
+services:
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx/
+    ports:
+      - 443:443
     init: true
-  - wordpress_php-fpm
+    restart: on-failure
+  wordpress:
     init: true
-  - mariadb
+    restart: on-failure
+  mariadb:
     init: true
+    restart: on-failure
   -> all restart in case of crash
 
 volume:
