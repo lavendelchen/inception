@@ -6,7 +6,7 @@ init flag!
 services:
   nginx:
     container_name: nginx
-    build: ./requirements/nginx/
+    build: ./requirements/nginx/ # works with / at end?
     ports:
       - 443:443
     init: true
