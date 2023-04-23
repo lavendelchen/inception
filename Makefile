@@ -1,81 +1,46 @@
+# **************************************************************************** #
+#	VARIABLES																   #
+# **************************************************************************** #
+
 NAME = inception
 
-ifeq ( , $(findstring .dockerenv, $(ISDOCKER)))
-	CC = c++
-else
-	CC = g++
-endif
+DIR_SRC = ./srcs/
 
-CC_FLAGS = -Wall -Wextra -Werror -std=c++98 -g
-
-DIR_OBJ = objs/
-
-DIR_SRC = srcs/
-
-DIR_CGI_SRC = cgi-bin/cgi-src/
-
-DIR_CGI_OBJ = cgi-bin/
-
-SRC := $(shell find $(DIR_SRC) -name "*.cpp")
-
-OBJ := $(patsubst $(DIR_SRC)%.cpp, $(DIR_OBJ)%.o, $(SRC))
-
-CGI_SRC := $(shell find $(DIR_CGI_SRC) -name "*.cpp")
-
-CGI_OBJ := $(patsubst $(DIR_CGI_SRC)%.cpp, $(DIR_CGI_OBJ)%.cgi, $(CGI_SRC))
-
-INCLUDE := -I./inc/
+COMPOSE_FILE = docker-compose.yml
 
 # **************************************************************************** #
 #	RULES																	   #
 # **************************************************************************** #
 
-all: $(CGI_OBJ) $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJ)
-	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
-	@$(CC) $(CC_FLAGS) $(INCLUDE) $^ -o $@
-	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
-	@printf $(GREEN)$(BOLD)"\t\tCOMPLETE!\n\n"$(RESET)
-	@printf $(MAGENTA)"\t\tName of executable: "$(RESET)$(BOLD)$(MAGENTA_BG)" $(NAME) "$(RESET)"\n\n"
+$(NAME):
+	@docker compose -p $(NAME) -f $(DIR_SRC)$(COMPOSE_FILE)
+	@printf $(CYAN)"$(NAME) created\n"$(RESET)
 
-$(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
+$(DIR_OBJ)%.o:	%.cpp
 	@mkdir -p $(dir $@)
-	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
-	@$(CC) $(CC_FLAGS) $(INCLUDE) -c $< -o $@
-	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
-
-$(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
-	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
-	@$(CC) $< -o $@
-	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
-
-install:
-	@pip3 --disable-pip-version-check install bs4 > /dev/null
-	@pip3 --disable-pip-version-check install requests > /dev/null
-	@brew install siege
-	@printf $(CYAN)$(BOLD)"Required packages installed [✓]\n"$(RESET)
+	@$(CC) $(CC_FLAGS) -c $< -o $@
+	@printf "$< compiled\n"
 
 clean:
-	@printf $(MAGENTA)"Removing object files...\r"$(RESET)
 	@rm -rf $(DIR_OBJ)
-	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
+	@printf $(RED)"Object files removed\n"$(RESET)
 
 fclean: clean
-	@printf $(MAGENTA)"Removing binary file...\r"$(RESET)
 	@rm -rf $(NAME)
-	@rm -rf $(CGI_OBJ)
-	@printf $(SPACE)$(GREEN)"[✓]\n\n"$(RESET)
+	@printf $(RED)"$(NAME) removed\n"$(RESET)
 
 re: fclean all
 
 exe:
-#	export PYTHONPATH="`python3 -m site --user-base`/lib/python/site-packages"
-	./$(NAME)
+	@printf $(CYAN)
+	./$(NAME) $(arg)
+	@printf $(RESET)
 
-run: all exe
+both: $(NAME) exe
 
-.PHONY: all clean fclean re exe
+.PHONY: all clean fclean re exe both
 
 # **************************************************************************** #
 #	TEXT MODIFIERS / FORMATITING CODES										   #
