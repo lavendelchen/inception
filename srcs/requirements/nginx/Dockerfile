@@ -2,8 +2,6 @@
 
 FROM	debian:bullseye
 
-CMD ["nginx", "-g", "daemon off;"]
-
 EXPOSE	443
 
 RUN		apt update && apt install nginx openssl -y
@@ -16,3 +14,5 @@ RUN		openssl req -new -newkey rsa:2048 -x509 -sha256 -days 365 -nodes \
 # remove this one, just for testing -> plus remove the actual files
 COPY	*light* /var/www/html/
 COPY	./conf/nginx.conf /etc/nginx/conf.d
+
+CMD ["nginx", "-g", "daemon off;"]

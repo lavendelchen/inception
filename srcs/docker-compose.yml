@@ -22,6 +22,8 @@ services:
 #  mariadb:
 #    container_name: mariadb
 #    build: ./requirements/mariadb/
+#    ports:
+#      - 3306:3306
 #    volumes:
 #      - database:/var/lib/mysql
 #    networks:
