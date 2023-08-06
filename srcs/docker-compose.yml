@@ -1,30 +1,47 @@
-version: "2.15"
-name: inception
-
-init flag!
-
 services:
   nginx:
     container_name: nginx
-    build: ./requirements/nginx/ # works with / at end?
+    build: ./requirements/nginx/
     ports:
       - 443:443
+    volumes:
+      - wordpress:/var/www/html/
+    networks:
+      - all
     init: true
     restart: on-failure
+#  wordpress:
+#    container_name: wordpress
+#    build: ./requirements/wordpress/
+#    volumes:
+#      - wordpress:/var/www/html/
+#    networks:
+#      - all
+#    init: true
+#    restart: on-failure
+#  mariadb:
+#    container_name: mariadb
+#    build: ./requirements/mariadb/
+#    volumes:
+#      - database:/var/lib/mysql
+#    networks:
+#      - all
+#    init: true
+#    restart: on-failure
+
+volumes:
+  database:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $HOME/data/mariadb
   wordpress:
-    init: true
-    restart: on-failure
-  mariadb:
-    init: true
-    restart: on-failure
-  -> all restart in case of crash
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $HOME/data/wordpress
 
-volume:
-  - WordPress database in one
-      - 2 users, one of them admin
-      - admin's username shouldn't contain admin or administrator
-  - WordPress website files in other one
-  -> both volumes should be in /home/<login>/data of host machine
-
-network: connection between containers
-  -> no host or --link or links
+networks:
+  all:

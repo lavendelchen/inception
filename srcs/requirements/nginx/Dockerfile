@@ -1,6 +1,6 @@
 #NGINX with TLSv1.2 or TLSv1.3 only
 
-FROM	debian:buster
+FROM	debian:bullseye
 
 CMD ["nginx", "-g", "daemon off;"]
 
@@ -16,8 +16,3 @@ RUN		openssl req -new -newkey rsa:2048 -x509 -sha256 -days 365 -nodes \
 # remove this one, just for testing -> plus remove the actual files
 COPY	*light* /var/www/html/
 COPY	./conf/nginx.conf /etc/nginx/conf.d
-
-
-
-# ENTRYPOINT musn’t be started with a command running an infinite
-# loop

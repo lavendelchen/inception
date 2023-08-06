@@ -1,7 +1,7 @@
 #install and configure WordPress & php-fpm (only)
 
 
-FROM debian:buster
+FROM debian:bullseye
 
 EXPOSE 9000
 
@@ -24,4 +24,6 @@ RUN cd /var/www/ && \
 ENTRYPOINT bash
 
 #ENTRYPOINT musn’t be started with a command running an infinite
-#loop
+#
+
+# WordPress website files in other volume
