@@ -19,17 +19,19 @@ services:
 #      - all
 #    init: true
 #    restart: on-failure
-#  mariadb:
-#    container_name: mariadb
-#    build: ./requirements/mariadb/
-#    ports:
-#      - 3306:3306
-#    volumes:
-#      - database:/var/lib/mysql
-#    networks:
-#      - all
-#    init: true
-#    restart: on-failure
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb/
+    ports:
+      - 3306:3306
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - all
+    init: true
+    restart: on-failure
+    env_file:
+      - ./requirements/mariadb/.env
 
 volumes:
   database:
