@@ -1,29 +1,39 @@
 #install and configure WordPress & php-fpm (only)
 
-
 FROM debian:bullseye
 
 EXPOSE 9000
 
-#RUN apt update && apt install -y \
-#	#php \
-#	#php-cgi \
-#	#php-mysql \
-#	php-fpm
-#	#php-pdo \
-#	#php-gd php-cli \
-#	#php-mbstring \
-#	#redis \
-#	#php-redis \
+ARG PHPPATH=/etc/php/7.3/fpm
 
-ADD https://wordpress.org/latest.tar.gz /var/www/latest.tar.gz
-RUN cd /var/www/ && \
-	tar -xvf latest.tar.gz && \
-	rm -rf latest.tar.gz
+RUN apt install -y	php7.3-fpm \
+					php7.3-mysql \
+					wget \
+					tar
 
-ENTRYPOINT bash
+RUN service php7.3-fpm stop
 
-#ENTRYPOINT musn’t be started with a command running an infinite
-#
+COPY www.conf ${PHPPATH}/pool.d/
 
-# WordPress website files in other volume
+# For security reasons: Limit what kind of php-cgi's can be run by the server
+# Set listen to port 9000 
+RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' ${PHPPATH}/php.ini && \
+	sed -i "s/listen = \/run\/php\/php$PHP_VERSION_ENV-fpm.sock/listen = 9000/g" ${PHPPATH}/pool.d/www.conf && \
+	sed -i 's/;listen.mode = 0660/listen.mode = 0660/g' ${PHPPATH}/pool.d/www.conf && \
+	sed -i 's/;daemonize = yes/daemonize = no/g' ${PHPPATH}/pool.d/www.conf
+
+# Download Wordpress CLI (for setup.sh)
+RUN wget --no-check-certificate https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+	chmod +x wp-cli.phar && \
+	mv wp-cli.phar /usr/local/bin/wp
+
+RUN mkdir -p /var/www/inception/
+# Chown to www-data
+RUN chown -R www-data:www-data /var/www/inception/ # does it work with slash?
+# Copy wordpress conf into wordpress root dir
+COPY wp-config.php /var/www/inception/
+
+COPY setup.sh /bin/
+RUN chmod +x /bin/setup.sh
+
+CMD ["setup.sh", "/usr/sbin/php7.3-fpm", "--nodaemonize"]

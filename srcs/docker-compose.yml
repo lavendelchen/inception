@@ -10,15 +10,19 @@ services:
       - all
     init: true
     restart: on-failure
-#  wordpress:
-#    container_name: wordpress
-#    build: ./requirements/wordpress/
-#    volumes:
-#      - wordpress:/var/www/html/
-#    networks:
-#      - all
-#    init: true
-#    restart: on-failure
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress/
+    volumes:
+      - wordpress:/var/www/inception/
+    networks:
+      - all
+    init: true
+    restart: on-failure
+    env_file:
+      - .env
+    depends_on:
+      - mariadb
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb/
@@ -31,7 +35,7 @@ services:
     init: true
     restart: on-failure
     env_file:
-      - ./requirements/mariadb/.env
+      - .env
 
 volumes:
   database:
