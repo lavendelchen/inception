@@ -4,14 +4,16 @@ FROM debian:bullseye
 
 EXPOSE 9000
 
-ARG PHPPATH=/etc/php/7.3/fpm
+ARG PHPPATH=/etc/php/7.4/fpm
 
-RUN apt install -y	php7.3-fpm \
-					php7.3-mysql \
-					wget \
-					tar
+RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
+		ca-certificates \
+		php7.4-fpm \
+		php7.4-mysql \
+		wget \
+		tar
 
-RUN service php7.3-fpm stop
+RUN service php7.4-fpm stop
 
 COPY www.conf ${PHPPATH}/pool.d/
 
@@ -27,7 +29,9 @@ RUN wget --no-check-certificate https://raw.githubusercontent.com/wp-cli/builds/
 	chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
 
-RUN mkdir -p /var/www/inception/
+RUN mkdir -p /run/php/ && \
+	mkdir -p /var/run/php/ && \
+	mkdir -p /var/www/inception/
 # Chown to www-data
 RUN chown -R www-data:www-data /var/www/inception/ # does it work with slash?
 # Copy wordpress conf into wordpress root dir
@@ -36,4 +40,4 @@ COPY wp-config.php /var/www/inception/
 COPY setup.sh /bin/
 RUN chmod +x /bin/setup.sh
 
-CMD ["setup.sh", "/usr/sbin/php7.3-fpm", "--nodaemonize"]
+CMD ["setup.sh", "php-fpm7.4", "--nodaemonize"]

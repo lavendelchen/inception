@@ -1,9 +1,13 @@
 #!/bin/bash
 
+set -ex
+
+sleep 3
+
 # download wordpress
-wp --allow-root core download --path="/var/www/inception"
+wp --allow-root --path="/var/www/inception" core download || true
 # install wordpress
-if ! wp --allow-root --path=/var/www/inception is-installed;
+if ! wp --allow-root --path=/var/www/inception core is-installed;
 then
     wp  --allow-root --path="/var/www/inception" core install \
         --url=$WP_URL \
@@ -15,7 +19,7 @@ fi;
 # make wordpress user
 if ! wp --allow-root --path=/var/www/inception user get $WP_USER;
 then
-    wp wp  --allow-root --path="/var/www/inception" user create \
+    wp  --allow-root --path="/var/www/inception" user create \
         $WP_USER \
         $WP_EMAIL \
         --user_pass=$WP_PASSWORD \
