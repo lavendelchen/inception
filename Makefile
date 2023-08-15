@@ -4,9 +4,9 @@
 
 NAME = inception
 
-DIR_SRC = ./srcs/
+DIR_SRC = ./srcs
 
-COMPOSE_FILE = docker-compose.yml
+COMPOSE_FILE = $(DIR_SRC)/docker-compose.yml
 
 # **************************************************************************** #
 #	RULES																	   #
@@ -14,33 +14,25 @@ COMPOSE_FILE = docker-compose.yml
 
 all: $(NAME)
 
-$(NAME):
-	@docker compose -p $(NAME) -f $(DIR_SRC)$(COMPOSE_FILE)
-	@printf $(CYAN)"$(NAME) created\n"$(RESET)
+$(NAME): up
 
-$(DIR_OBJ)%.o:	%.cpp
-	@mkdir -p $(dir $@)
-	@$(CC) $(CC_FLAGS) -c $< -o $@
-	@printf "$< compiled\n"
+up:
+	@mkdir -p ~/data/mariadb
+	@mkdir -p ~/data/wordpress
+	@docker compose -p $(NAME) -f $(COMPOSE_FILE) up || ( printf $(BLUE)"MAKEFILE NOTE: perhaps you haven't started docker?\n"$(RESET); exit 1 )
+	@printf $(BLUE)"$(NAME) started!\n"$(RESET)
 
-clean:
-	@rm -rf $(DIR_OBJ)
-	@printf $(RED)"Object files removed\n"$(RESET)
+down:
+	@docker compose -f $(COMPOSE_FILE) down
+	@printf $(RED)"Inception stopped.\n"$(RESET)
 
-fclean: clean
-	@rm -rf $(NAME)
-	@printf $(RED)"$(NAME) removed\n"$(RESET)
+re:
+	mkdir -p ~/data/mariadb
+	mkdir -p ~/data/wordpress
+	@docker compose -p $(NAME) -f $(COMPOSE_FILE) up --build
+	@printf $(BLUE)"$(NAME) started!\n"$(RESET)
 
-re: fclean all
-
-exe:
-	@printf $(CYAN)
-	./$(NAME) $(arg)
-	@printf $(RESET)
-
-both: $(NAME) exe
-
-.PHONY: all clean fclean re exe both
+.PHONY: all up down re
 
 # **************************************************************************** #
 #	TEXT MODIFIERS / FORMATITING CODES										   #
