@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# for debugging and stuff
 set -ex
 
 sleep 3
 
 # download wordpress
 wp --allow-root --path="/var/www/inception/" core download || true
+
 # install wordpress
 if ! wp --allow-root --path="/var/www/inception/" core is-installed;
 then
@@ -16,6 +18,7 @@ then
         --admin_password=$WP_ADMIN_PASSWORD \
         --admin_email=$WP_ADMIN_EMAIL
 fi;
+
 # make wordpress user
 if ! wp --allow-root --path="/var/www/inception/" user get $WP_USER;
 then
@@ -26,4 +29,5 @@ then
         --role=$WP_ROLE
 fi;
 
+# run wordpress/php-fpm
 exec $@
