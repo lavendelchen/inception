@@ -17,22 +17,16 @@ all: $(NAME)
 $(NAME): up
 
 up:
-	@mkdir -p ~/data/mariadb
-	@mkdir -p ~/data/wordpress
-	@docker compose -p $(NAME) -f $(COMPOSE_FILE) up || ( printf $(BLUE)"MAKEFILE NOTE: perhaps you haven't started docker?\n"$(RESET); exit 1 )
+	@mkdir -p ~/data/database
+	@mkdir -p ~/data/wordpress_files
+	@docker compose -p $(NAME) -f $(COMPOSE_FILE) up --build || ( printf $(BLUE)"MAKEFILE NOTE: perhaps you haven't started docker?\n"$(RESET); exit 1 )
 	@printf $(BLUE)"$(NAME) started!\n"$(RESET)
 
 down:
 	@docker compose -f $(COMPOSE_FILE) down
 	@printf $(RED)"Inception stopped.\n"$(RESET)
 
-re:
-	mkdir -p ~/data/mariadb
-	mkdir -p ~/data/wordpress
-	@docker compose -p $(NAME) -f $(COMPOSE_FILE) up --build
-	@printf $(BLUE)"$(NAME) started!\n"$(RESET)
-
-.PHONY: all up down re
+.PHONY: all up down
 
 # **************************************************************************** #
 #	TEXT MODIFIERS / FORMATITING CODES										   #
