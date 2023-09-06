@@ -5,7 +5,7 @@ services:
     ports:
       - '443:443'
     volumes:
-      - /home/tonio/data/wordpress_files:/var/www/inception/
+      - ~/data/wordpress_files:/var/www/inception/
     networks:
       - all
     init: true
@@ -18,7 +18,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress/
     volumes:
-      - /home/tonio/data/wordpress_files:/var/www/inception/
+      - ~/data/wordpress_files:/var/www/inception/
     networks:
       - all
     init: true
@@ -33,7 +33,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - /home/tonio/data/database:/var/lib/mysql
+      - ~/data/database:/var/lib/mysql
     networks:
       - all
     init: true
@@ -47,13 +47,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/tonio/data/database
+      device: ~/data/database
   wordpress_files:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/tonio/data/wordpress_files
+      device: ~/data/wordpress_files
 
 networks:
   all:
