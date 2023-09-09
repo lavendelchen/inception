@@ -39,8 +39,8 @@ RUN		mkdir -p /run/php/ && \
 # Give www-data user ownership over the inception dir
 RUN		chown -R www-data:www-data /var/www/inception/
 
-# Get wordpress conf
-COPY	wp-config.php /var/www/inception/
+# Get wordpress conf, can't copy into correct dir yet since it is a bind mount & they are weird
+COPY	wp-config.php /tmp/
 
 # Get startup / setup file
 COPY	setup.sh /bin/

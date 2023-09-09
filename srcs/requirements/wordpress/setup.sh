@@ -1,9 +1,17 @@
 #!/bin/bash
 
+
 # For debugging and stuff
 set -ex
 
-sleep 3
+# Put wp-config.php into correct dir since that isn't possible in building of image
+if [ ! -f "/var/www/inception/wp-config.php" ]; then
+   mv /tmp/wp-config.php /var/www/inception/
+fi
+
+cat /var/www/inception/wp-config.php
+
+sleep 10
 
 # Download wordpress
 wp --allow-root --path="/var/www/inception/" core download || true
