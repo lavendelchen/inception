@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# For debugging and stuff
+set -ex
+
 # Start mariadb so we can do the setup
 ( service mariadb start & ) | grep -q "Service is active" || true
 
