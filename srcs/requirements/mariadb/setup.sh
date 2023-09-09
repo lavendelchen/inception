@@ -4,11 +4,12 @@
 set -ex
 
 # Start mariadb so we can do the setup
-( service mariadb start & ) | grep -q "Service is active" || true #??
+( service mariadb start & ) | grep -q "Service is active" || true
 
-sleep 3
 
-service mariadb status
+# debug
+#sleep 3
+#service mariadb status
 
 # Create all necessary users etc (if they haven't been created already)
 mariadb -v -u root << EOF
