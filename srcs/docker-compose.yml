@@ -18,7 +18,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress/
     volumes:
-      - ~/data/wordpress_files:/var/www/inception/
+      - wordpress_files:/var/www/inception/ # PATH?
     networks:
       - all
     init: true
@@ -30,10 +30,8 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb/
-    ports:
-      - '3306:3306'
     volumes:
-      - ~/data/database:/var/lib/mysql
+      - database:/var/lib/mysql # PATH?
     networks:
       - all
     init: true

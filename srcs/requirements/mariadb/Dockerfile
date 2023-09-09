@@ -6,7 +6,7 @@ EXPOSE	3306
 RUN		apt update && apt install -y --no-install-recommends --no-install-suggests mariadb-server
 
 # Get mariadb config file
-COPY	50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY	50-server.cnf /etc/mysql/mariadb.conf.d/
 
 # Get startup / setup file
 COPY	setup.sh /bin/
