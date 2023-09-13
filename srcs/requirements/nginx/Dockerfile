@@ -1,6 +1,6 @@
 FROM	debian:bullseye
 
-EXPOSE	443 9000
+EXPOSE	443
 
 # Install nginx & openssl (for making certificates)
 RUN		apt update && apt install -y --no-install-recommends --no-install-suggests \
