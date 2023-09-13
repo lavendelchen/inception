@@ -5,7 +5,7 @@ services:
     ports:
       - '443:443'
     volumes:
-      - ~/data/wordpress_files:/var/www/inception/
+      - wordpress_files:/var/www/inception/
     networks:
       - all
     init: true
@@ -18,7 +18,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress/
     volumes:
-      - wordpress_files:/var/www/inception/ # PATH?
+      - wordpress_files:/var/www/inception/
     networks:
       - all
     init: true
@@ -31,7 +31,7 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb/
     volumes:
-      - database:/var/lib/mysql # PATH?
+      - database:/var/lib/mysql/
     networks:
       - all
     init: true
